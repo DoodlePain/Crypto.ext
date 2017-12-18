@@ -22,4 +22,4 @@ npm run build
 ```
 Last step is to copy the content of ./add directory directly into build.
 
-Now you can easly import the ./build directory into your Chrome Browser
+Now you can easily import the ./build directory into your Chrome Browser
