@@ -4,9 +4,11 @@ import './App.css';
 import Convert from './components/utilities/convert';
 import Select from 'react-select';
 import Widget from './components/widget/Widget';
-import options from './components/utilities/criptocurrency';
+import options from './components/utilities/cryptocurrency';
 import getTotalValue from './components/utilities/getTotalValue';
 import {Button, Title, SubTitle} from 'reactbulma';
+import api from './components/utilities/api';
+import * as firebase from 'firebase';
  
 export default class App extends React.Component {
 
@@ -105,13 +107,52 @@ export default class App extends React.Component {
 		this.setState({modify:!this.state.modify})
 	}
 
-	
+	firebaseToThis = () => {
+		let string;
+		let total;
+		let fire;
+		let snapRes;
+		let db;
+
+		options.map((curr)=> {
+			db = firebase.database().ref('users/'+curr.id);
+			db.once('value').then((snapshot) => {
+			    snapRes = (snapshot.val() && snapshot.val().value);
+			    fire = this.state.firebase.slice();
+			    string = {name:curr.id ,value: snapRes};
+			    fire.push(string);
+			    this.setState({firebase:fire});
+			    api.getInfo(curr.id).then((res) => {
+			      	if(!isNaN(snapRes)){
+			       		total = this.state.total + snapRes*res.Data[0].close;
+			        	this.setState({total:total});
+		      		}
+		    	})
+		  	})
+		})
+	}
 
 
   render() {
   
     return (
-  		
+    	<div className="App">
+  			<div className="App-header">
+  				<img src={logo} className="App-logo" alt="logo"/>
+	            <Title is="2" spaced>CryptoWitdget</Title>
+	            <SubTitle is="4">Your account value :</SubTitle>
+	            <Title is="4">{this.state.total}$</Title>
+  			</div>
+  			<div className="center">
+  				<Select
+	              name="form-field-name"
+	              value={this.state.api.symbol}
+	              options={options}
+	              onChange={this.logChange}
+	              placeholder={this.state.api.symbol}
+	            />
+  			</div>
+		</div>
     );
   }
 }; 
