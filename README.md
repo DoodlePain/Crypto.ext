@@ -6,3 +6,10 @@ Clone the directory with:
 ```git
 git clone https://github.com/DoodlePain/Crypto.ext.git
 ```
+then run 
+``` install
+// switch to the directory
+cd ./Crypto.ext
+// and install the dependecies with
+npm install
+```
