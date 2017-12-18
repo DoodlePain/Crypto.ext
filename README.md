@@ -9,7 +9,17 @@ git clone https://github.com/DoodlePain/Crypto.ext.git
 then run 
 ``` install
 // switch to the directory
+
 cd ./Crypto.ext
+
 // and install the dependecies with
+
 npm install
 ```
+Then build the package with
+``` build
+npm run build
+```
+Last step is to copy the content of ./add directory directly into build.
+
+Now you can easly import the ./build directory into your Chrome Browser
