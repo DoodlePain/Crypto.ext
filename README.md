@@ -1,6 +1,9 @@
 # Crypto.ext
 Check in realtime your actual cryptowallet value and the single cryptocurrency daily trend directly inside your Chrome browser.
 Made with React.js
+## Try it
+git.heroku.com/crypto-ext.git
+
 ## How to install
 Clone the directory with: 
 ```git
