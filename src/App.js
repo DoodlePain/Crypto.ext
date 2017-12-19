@@ -133,8 +133,64 @@ export default class App extends React.Component {
 	}
 
 
-  render() {
-  
+	render() {
+
+		let widget = null;
+		let total = null;
+		let add ;
+		var data = this.state.api;
+
+		if(this.state.available){
+		widget = <Widget
+		  actual={this.state.api.symbol}
+		  data={this.state.api}
+		  ammount={this.state.ammount}
+		  getTrend={this.getTrend}
+		/>
+		} else {
+		widget = (
+		    <h1>Select the ammount and the Currency</h1>
+		  )
+		}
+
+		if(this.state.total){
+		total = <getTotalValue total={this.state.total} />
+		}
+
+
+		if(this.state.ammount===0){
+		add = (
+		  <p className="App-intro">
+		    <Convert 
+		    from={data.symbol} 
+		    actual={data.price_usd} 
+		    add={this.addToDBHandler}
+		    changeCurrency={this.changeCurrency}
+		    handleChange={this.handleChange}
+		    value={this.state.value}
+		  />
+		</p>
+		)
+		} else if(this.state.modify===false ){
+		add = (
+		  <p>
+		    <Button medium onClick={this.activateModify}>Modify</Button>
+		  </p>
+		)
+		}
+		if(this.state.modify===true ) {
+		add = (
+		  <p className="App-intro">
+		    <Convert 
+		    from={data.symbol} 
+		    actual={data.price_usd} 
+		    add={this.addToDBHandler}
+		    changeCurrency={this.changeCurrency}
+		    handleChange={this.handleChange}
+		    value={this.state.value}
+		  />
+		</p>
+	)}  
     return (
     	<div className="App">
   			<div className="App-header">
@@ -151,6 +207,9 @@ export default class App extends React.Component {
 	              onChange={this.logChange}
 	              placeholder={this.state.api.symbol}
 	            />
+
+	            {widget}
+	            {add}
   			</div>
 		</div>
     );
