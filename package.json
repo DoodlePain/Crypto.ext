@@ -1,5 +1,5 @@
 {
-  "name": "btc",
+  "name": "Crypto.ext",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -19,5 +19,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "engines": {
+    "node": "6.10.0",
+    "npm": "3.10.10"
   }
 }
