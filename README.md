@@ -17,11 +17,17 @@ cd ./Crypto.ext
 npm install
 ```
 Go to https://console.firebase.google.com and create a project.
+
 Choose a name and the location by your own than create it.
+
 Click "Add firebase to your web application" and copy the text between 
+
 "var config ={"
+
 and
+
 "firebase.initializeApp(config);"
+
 and override the strings with your data inside ./src/components/utilities/firebase.js
 
 Then , inside the root folder, build the package with 
