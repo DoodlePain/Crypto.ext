@@ -1,11 +1,11 @@
 import * as firebase from 'firebase';
 
 var database = {
-  apiKey: "AIzaSyD7pjeu2NIZ51pHytDu2gZ5VFCIpThP8vg",
-  authDomain: "ccoin-24869.firebaseapp.com",
-  databaseURL: "https://ccoin-24869.firebaseio.com",
-  projectId: "ccoin-24869",
-  storageBucket: "ccoin-24869.appspot.com",
-  messagingSenderId: "425443290088"
+  apiKey: <Your api key>,
+  authDomain: <Your authDomain>,
+  databaseURL: <Your databaseURL>,
+  projectId: <Your projectId>,
+  storageBucket: <Your storageBucket>,
+  messagingSenderId: <Your messagingSenderId>
 };
 firebase.initializeApp(database);
