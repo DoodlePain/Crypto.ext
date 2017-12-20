@@ -19,23 +19,33 @@
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.center{
+.center {
+  padding-top: 2%;
+  padding-bottom: 2%;
   padding-left: 20%;
   padding-right: 20%;
 }
 
-.title.is-2{
+.title.is-2 {
   color: white;
 }
 
-.title.is-4{
+.title.is-4 {
   color: white;
 }
 
-.subtitle.is-4{
+.subtitle.is-4 {
   color: white;
+}
+
+.surprise {
+  cursor: pointer;
 }
