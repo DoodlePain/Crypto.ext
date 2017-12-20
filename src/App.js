@@ -10,7 +10,7 @@ import * as firebase from 'firebase';
 import Widget from './components/widget/Widget';
 import options from './components/utilities/cryptocurrency';
 import getTotalValue from './components/utilities/getTotalValue';
-// import {Button, Title, SubTitle} from 'reactbulma';
+import Footer from './components/footer'
 
 class App extends Component {
   constructor(props) {
@@ -30,7 +30,8 @@ class App extends Component {
       available: null,
       total: 0,
       firebase: [],
-      modify: false
+      modify: false,
+      surprise: false
     };
   }
 
@@ -56,9 +57,10 @@ class App extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    console.log('[App.js] nextState :', nextState.ammount, ' this.state ', this.state.ammount);
+    if (nextState.surprise !== this.state.surprise) {
+      return true
+    }
     if (nextState.api.trend !== this.state.api.trend) {
-      console.log('[App.js] shouldComponentUpdate() api.trend update');
       return true
     }
     if (nextState.value !== this.state.value) {
@@ -72,7 +74,6 @@ class App extends Component {
     }
     if (nextState.ammount === this.state.ammount) {
       if (nextState.modify !== this.state.modify) {
-        console.log('isopi')
         return true
       }
       return false
@@ -147,9 +148,7 @@ class App extends Component {
   }
 
   handleChange = (event) => {
-    console.log('[App.js] handleChange() : event.target.value', event.target.value);
     this.setState({value: event.target.value});
-    console.log('[App.js] handleChange() : this.state.value after select change', this.state.value)
   }
 
   getTotal = () => {
@@ -177,17 +176,31 @@ class App extends Component {
     return null;
   }
 
+  getSurprise = () => {
+    this.setState({
+      surprise: !this.state.surprise
+    })
+  }
+
   render() {
 
-    let widget = null;
+    let widget1 = null;
+    let widget2 = null;
     let total = null;
     let add;
     var data = this.state.api;
+    let surprise = <u className="surprise" onClick={this.getSurprise}>Click me to receive a surprise</u>;
+
+    if (this.state.surprise) {
+      surprise = <Footer/>
+    }
 
     if (this.state.available) {
-      widget = <Widget actual={this.state.api.symbol} data={this.state.api} ammount={this.state.ammount} getTrend={this.getTrend}/>
+      widget1 = null;
+      widget2 = <Widget actual={this.state.api.symbol} data={this.state.api} ammount={this.state.ammount} getTrend={this.getTrend}/>
     } else {
-      widget = (<h1>Select the ammount and the Currency</h1>)
+      widget1 = (<h1><b>Select the Currency</b></h1>)
+      widget2 = null;
     }
 
     if (this.state.total) {
@@ -195,9 +208,7 @@ class App extends Component {
     }
 
     if (this.state.ammount === 0) {
-      add = (<p className="App-intro">
-        <Convert from={data.symbol} actual={data.price_usd} add={this.addToDBHandler} changeCurrency={this.changeCurrency} handleChange={this.handleChange} value={this.state.value}/>
-      </p>)
+      add = null
     } else if (this.state.modify === false) {
       add = (<p>
         <button onClick={this.activateModify}>Modify</button>
@@ -209,6 +220,7 @@ class App extends Component {
       </p>)
     }
     return (<div className="App">
+
       <div className="App-header">
         <img src={logo} className="App-logo" alt="logo"/>
         <h2>CryptoWitdget</h2>
@@ -216,9 +228,12 @@ class App extends Component {
         <h4>{this.state.total}$</h4>
       </div>
       <div className="center">
-        <Select name="form-field-name" value={this.state.api.symbol} options={options} onChange={this.logChange} placeholder={this.state.api.symbol}/> {widget}
+        {widget1}
+        <Select name="form-field-name" value={this.state.api.symbol} options={options} onChange={this.logChange} placeholder={this.state.api.symbol}/>
+        {widget2}
         {add}
       </div>
+    {surprise}
     </div>);
   }
 }
