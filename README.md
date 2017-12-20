@@ -3,7 +3,7 @@ Check in realtime your actual cryptowallet value and the single cryptocurrency d
 Made with React.js
 
 ## Live demo
-[Give it a try](https://git.heroku.com/crypto-ext.git)
+[Give it a try](https://crypto-ext.herokuapp.com/)
 
 ## How to install
 Clone the directory with: 
