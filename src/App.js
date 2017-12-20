@@ -39,6 +39,7 @@ class App extends Component {
     if (val !== undefined) {
       if (val !== null) {
         api.getInfo(val.id).then((res) => {
+          // console.log('[App.js] Result ' ,res.Data[24]);
           trend = (res.Data[24].close - res.Data[0].close);
           let fixedTrend = trend.toFixed(3);
           this.setState({
@@ -49,6 +50,7 @@ class App extends Component {
               trend: fixedTrend
             }
           })
+          // console.log("Selected: " ,this.state.api);
           this.getTrend(val.id)
         })
       }
@@ -81,12 +83,18 @@ class App extends Component {
   }
 
   addToDBHandler = () => {
-    const rootRef = firebase.database().ref('users/' + this.state.api.symbol).set({currency: this.state.api.symbol, value: this.state.value});
+    const rootRef = firebase.database().ref('users/' + this.state.api.symbol).set({
+      // const rootRef = firebase.database().ref('users/BTC').set({
+      currency: this.state.api.symbol,
+      value: this.state.value
+    });
     this.setState({modify: false})
+    // console.log("[App.js] Line 37: this.state.api.symbol : ",this.state.api.symbol);
 
   }
 
   getTrend = (curr) => {
+    // console.log('[App.js] getTrend() state.api.symbol content', this.state.api.symbol);
     var user = '';
     if (curr !== null) {
       user = 'users/' + curr
@@ -113,6 +121,7 @@ class App extends Component {
         oldprice_usd: res.Data[0].close
       }
       this.setState({api: result})
+      // console.log('[App.js] state content', this.state.api);
     })
     this.logChange()
   }
@@ -133,14 +142,21 @@ class App extends Component {
         fire.push(string);
         this.setState({firebase: fire});
 
+        // console.log('[App.js] string result: ', string);
         api.getInfo(curr.id).then((res) => {
           if (!isNaN(snapRes)) {
             let total = this.state.total + snapRes * res.Data[0].close;
             this.setState({total: total});
+            // console.log('[App.js] Total of : ', fixedTotal);
           }
         })
       })
     })
+  }
+
+  componentDidMount() {
+    // this.getTotal()
+    // console.log('[App.js] getTotal() result ',this.state.ammount);
   }
 
   changeCurrency = (currency) => {
@@ -160,9 +176,13 @@ class App extends Component {
     while (this.state.firebase === null) {
       console.log('Waiting for firebase', this.state.firebase)
     }
+    // console.log('FIREBASE' , this.state.firebase)
+
     options.map((curr) => {
+      // console.log('[App.js] Checking ' , curr.id , ' total');
       db = firebase.database().ref('users/' + curr.id);
       api.getInfo(curr.id).then((res) => {
+        // console.log('[App.js] getTotal() db result ',res ,' of ', curr.id);
         if (res) {
           price = res.Data[0].close;
         }
@@ -208,6 +228,7 @@ class App extends Component {
         <Convert from={data.symbol} actual={data.price_usd} add={this.addToDBHandler} changeCurrency={this.changeCurrency} handleChange={this.handleChange} value={this.state.value}/>
       </p>)
     }
+    // console.log('[App.js] data content : ',data);
     return (<div className="App">
       <div className="App-header">
         <img src={logo} className="App-logo" alt="logo"/>
