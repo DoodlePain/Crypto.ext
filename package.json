@@ -36,6 +36,7 @@
     "react": "^15.6.1",
     "react-chartjs": "^0.8.0",
     "react-chartjs-2": "^2.6.2",
+    "react-confetti": "^2.0.2",
     "react-dev-utils": "^4.0.1",
     "react-dom": "^15.6.1",
     "react-flexbox-grid": "^1.1.5",
