@@ -1,4 +1,13 @@
-.center{
-	padding-left: 20%;
-	padding-right: 20%;
+.center {
+  padding-left: 20%;
+  padding-right: 20%;
+}
+
+.facebook {
+  background: #4267b2;
+  border-radius: 5px;
+  color: white;
+  height: 40px;
+  text-align: center;
+  width: 250px;
 }
