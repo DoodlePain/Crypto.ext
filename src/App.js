@@ -9,7 +9,6 @@ import database from './components/utilities/firebase';
 import * as firebase from 'firebase';
 import Widget from './components/widget/Widget';
 import options from './components/utilities/cryptocurrency';
-import getTotalValue from './components/utilities/getTotalValue';
 import LoginForm from './components/utilities/login'
 import Footer from './components/footer'
 
@@ -34,7 +33,8 @@ class App extends Component {
       modify: false,
       surprise: false,
       id: '',
-      loginChange: false
+      loginChange: false,
+      update: true
     };
   }
 
@@ -60,29 +60,40 @@ class App extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    // console.log(nextState, '    ' ,this.state);
     if (nextState.loginChange !== this.state.loginChange) {
+      // console.log('loginChange');
       return true
     }
     if (nextState.id !== this.state.id) {
+      // console.log('id change');
+
       return true
     }
     if (nextState.surprise !== this.state.surprise) {
+      // console.log('surprise change');
       return true
     }
     if (nextState.api.trend !== this.state.api.trend) {
+      // console.log('api.trend change');
       return true
     }
     if (nextState.value !== this.state.value) {
+      // console.log('value change');
       return true
     }
     if (nextState.total !== this.state.total) {
+      // console.log('total change');
       return true
     }
     if (nextState.ammount !== this.state.ammount) {
+      // console.log('ammount change');
       return true
     }
     if (nextState.ammount === this.state.ammount) {
+      // console.log('ammount === change');
       if (nextState.modify !== this.state.modify) {
+        // console.log('modify change');
         return true
       }
       return false
@@ -140,7 +151,7 @@ class App extends Component {
   firebaseToThis = (uid) => {
     let string;
     options.map((curr) => {
-
+      console.log("Ciao");
       let db = firebase.database().ref('users/' + uid + curr.id);
       db.once('value').then((snapshot) => {
 
@@ -161,6 +172,8 @@ class App extends Component {
         })
       })
     })
+
+    this.forceUpdate()
   }
 
   changeCurrency = (currency) => {
@@ -203,11 +216,14 @@ class App extends Component {
   }
 
   handleLogin = (data) => {
+    const user = sessionStorage.getItem('user');
     if (sessionStorage.getItem('user') === null) {
       sessionStorage.setItem('user', JSON.stringify(data.profile.id));
-      const user = sessionStorage.getItem('user');
+      this.firebaseToThis(user)
     } else {
       sessionStorage.removeItem('user');
+      this.setState({total:0})
+      this.firebaseToThis(user)
     }
     this.setState({
       loginChange: !this.state.loginChange
@@ -237,9 +253,6 @@ class App extends Component {
       widget2 = <Convert from={data.symbol} actual={data.price_usd} add={this.addToDBHandler} changeCurrency={this.changeCurrency} handleChange={this.handleChange} value={this.state.value}/>;
     }
 
-    if (this.state.total) {
-      total = <getTotalValue total={this.state.total}/>
-    }
 
     if (this.state.ammount === 0) {
       add = null
