@@ -212,6 +212,7 @@ class App extends Component {
     this.setState({
       loginChange: !this.state.loginChange
     })
+    this.firebaseToThis;
   }
 
   render() {

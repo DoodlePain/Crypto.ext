@@ -1,5 +1,5 @@
 import React from 'react';
-import FacebookProvider, {Login} from 'react-facebook';
+import FacebookProvider, {Login} from '../../../node_modules/react';
 
 class LoginForm extends React.Component {
   constructor(props) {
