@@ -16,7 +16,7 @@ class LoginForm extends React.Component {
     let user = sessionStorage.getItem('user');
 
     if (user === null) {
-      login = (<FacebookProvider appId="152567472134498">
+      login = (<FacebookProvider appId="140137076692279">
         <Login scope="email" onResponse={this.props.handleResponse} onError={this.handleError}>
           <button className="facebook" onClick={this.props.loginChange}>Login via Facebook</button>
         </Login>
