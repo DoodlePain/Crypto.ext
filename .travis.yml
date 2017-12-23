@@ -5,6 +5,7 @@ cache:
   directories:
   - node_modules
 script:
+  - chmod -R a+rwx ./node_modules 
   - npm run build
 deploy:
   provider: pages
