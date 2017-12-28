@@ -9,7 +9,6 @@ import database from './components/utilities/firebase';
 import * as firebase from 'firebase';
 import Widget from './components/widget/Widget';
 import options from './components/utilities/cryptocurrency';
-import LoginForm from './components/utilities/login'
 import Footer from './components/footer'
 
 class App extends Component {
@@ -134,6 +133,12 @@ class App extends Component {
   }
 
   componentWillMount() {
+    if(sessionStorage.getItem('user')===undefined || sessionStorage.getItem('user')===null)
+    {
+      const date = Date.now()
+      console.log(date);
+      sessionStorage.setItem('user',date);
+    }
 
     this.accountCheck()
 
@@ -272,9 +277,6 @@ class App extends Component {
         <h2>CryptoWitdget</h2>
         <h3>Your account value :</h3>
         <h4>{this.state.total}$</h4>
-      </div>
-      <div className="LoginHolder">
-        <LoginForm handleResponse={this.handleLogin}/>
       </div>
       <div className="center">
         {widget1}
