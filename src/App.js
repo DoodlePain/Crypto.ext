@@ -1,27 +1,15 @@
 import React, {Component} from 'react';
-import classes from './Widget.css';
+import logo from './logo.svg';
+import './App.css';
+import api from './components/utilities/api';
+import Convert from './components/utilities/convert';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
+import database from './components/utilities/firebase';
 import * as firebase from 'firebase';
-<<<<<<< HEAD
-
-class Widget extends React.Component {
-  render() {
-    let trend = this.props.data.trend;
-    let trendClass = '';
-    var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-    console.log('[Widget.js] this.props.data.trend content : ', this.props.data.trend);
-    if (this.props.data.trend > 0) {
-      trendClass = 'green'
-    }
-    if (this.props.data.trend < 0) {
-      trendClass = 'red'
-    }
-
-    if (trend > 0) {
-      trend = '+' + trend + '$🤑';
-=======
 import Widget from './components/widget/Widget';
 import options from './components/utilities/cryptocurrency';
-import Footer from './components/footer'
+import {Button, Title, SubTitle} from 'reactbulma';
 
 class App extends Component {
   constructor(props) {
@@ -41,11 +29,7 @@ class App extends Component {
       available: null,
       total: 0,
       firebase: [],
-      modify: false,
-      surprise: false,
-      id: '',
-      loginChange: false,
-      update: true
+      modify: false
     };
   }
 
@@ -54,6 +38,7 @@ class App extends Component {
     if (val !== undefined) {
       if (val !== null) {
         api.getInfo(val.id).then((res) => {
+          // console.log('[App.js] Result ' ,res.Data[24]);
           trend = (res.Data[24].close - res.Data[0].close);
           let fixedTrend = trend.toFixed(3);
           this.setState({
@@ -64,6 +49,7 @@ class App extends Component {
               trend: fixedTrend
             }
           })
+          // console.log("Selected: " ,this.state.api);
           this.getTrend(val.id)
         })
       }
@@ -71,40 +57,23 @@ class App extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    // console.log(nextState, '    ' ,this.state);
-    if (nextState.loginChange !== this.state.loginChange) {
-      // console.log('loginChange');
-      return true
-    }
-    if (nextState.id !== this.state.id) {
-      // console.log('id change');
-
-      return true
-    }
-    if (nextState.surprise !== this.state.surprise) {
-      // console.log('surprise change');
-      return true
-    }
+    console.log('[App.js] nextState :', nextState.ammount, ' this.state ', this.state.ammount);
     if (nextState.api.trend !== this.state.api.trend) {
-      // console.log('api.trend change');
+      console.log('[App.js] shouldComponentUpdate() api.trend update');
       return true
     }
     if (nextState.value !== this.state.value) {
-      // console.log('value change');
       return true
     }
     if (nextState.total !== this.state.total) {
-      // console.log('total change');
       return true
     }
     if (nextState.ammount !== this.state.ammount) {
-      // console.log('ammount change');
       return true
     }
     if (nextState.ammount === this.state.ammount) {
-      // console.log('ammount === change');
       if (nextState.modify !== this.state.modify) {
-        // console.log('modify change');
+        console.log('isopi')
         return true
       }
       return false
@@ -113,19 +82,24 @@ class App extends Component {
   }
 
   addToDBHandler = () => {
-    const uid = sessionStorage.getItem('user');
-    const rootRef = firebase.database().ref('users/' + uid + this.state.api.symbol).set({currency: this.state.api.symbol, value: this.state.value});
+    const rootRef = firebase.database().ref('users/' + this.state.api.symbol).set({
+      // const rootRef = firebase.database().ref('users/BTC').set({
+      currency: this.state.api.symbol,
+      value: this.state.value
+    });
     this.setState({modify: false})
+    // console.log("[App.js] Line 37: this.state.api.symbol : ",this.state.api.symbol);
+
   }
 
   getTrend = (curr) => {
+    // console.log('[App.js] getTrend() state.api.symbol content', this.state.api.symbol);
     var user = '';
-    const uid = sessionStorage.getItem('user');
     if (curr !== null) {
-      user = 'users/' + uid + curr
+      user = 'users/' + curr
     }
     if (curr === null) {
-      user = 'users/' + uid + this.state.api.symbol
+      user = 'users/' + this.state.api.symbol
     }
     const db = firebase.database().ref(user);
     db.once('value').then((snapshot) => {
@@ -137,23 +111,8 @@ class App extends Component {
     });
   }
 
-  accountCheck = () => {
-    const user = sessionStorage.getItem('user')
-    if (user) {
-      this.firebaseToThis(user)
-    }
-  }
-
   componentWillMount() {
-    if(sessionStorage.getItem('user')===undefined || sessionStorage.getItem('user')===null)
-    {
-      const date = Date.now()
-      console.log(date);
-      sessionStorage.setItem('user',date);
-    }
-
-    this.accountCheck()
-
+    this.firebaseToThis()
     api.getInfo('BTC').then((res) => {
       const result = {
         symbol: 'BTC',
@@ -161,15 +120,16 @@ class App extends Component {
         oldprice_usd: res.Data[0].close
       }
       this.setState({api: result})
+      // console.log('[App.js] state content', this.state.api);
     })
     this.logChange()
   }
 
-  firebaseToThis = (uid) => {
+  firebaseToThis = () => {
     let string;
     options.map((curr) => {
-      console.log("Ciao");
-      let db = firebase.database().ref('users/' + uid + curr.id);
+
+      let db = firebase.database().ref('users/' + curr.id);
       db.once('value').then((snapshot) => {
 
         const snapRes = (snapshot.val() && snapshot.val().value);
@@ -181,16 +141,21 @@ class App extends Component {
         fire.push(string);
         this.setState({firebase: fire});
 
+        // console.log('[App.js] string result: ', string);
         api.getInfo(curr.id).then((res) => {
           if (!isNaN(snapRes)) {
             let total = this.state.total + snapRes * res.Data[0].close;
             this.setState({total: total});
+            // console.log('[App.js] Total of : ', fixedTotal);
           }
         })
       })
     })
+  }
 
-    this.forceUpdate()
+  componentDidMount() {
+    // this.getTotal()
+    // console.log('[App.js] getTotal() result ',this.state.ammount);
   }
 
   changeCurrency = (currency) => {
@@ -198,7 +163,9 @@ class App extends Component {
   }
 
   handleChange = (event) => {
+    console.log('[App.js] handleChange() : event.target.value', event.target.value);
     this.setState({value: event.target.value});
+    console.log('[App.js] handleChange() : this.state.value after select change', this.state.value)
   }
 
   getTotal = () => {
@@ -208,10 +175,13 @@ class App extends Component {
     while (this.state.firebase === null) {
       console.log('Waiting for firebase', this.state.firebase)
     }
-    const uid = sessionStorage.getItem('user');
+    // console.log('FIREBASE' , this.state.firebase)
+
     options.map((curr) => {
-      db = firebase.database().ref('users/' + uid + curr.id);
+      // console.log('[App.js] Checking ' , curr.id , ' total');
+      db = firebase.database().ref('users/' + curr.id);
       api.getInfo(curr.id).then((res) => {
+        // console.log('[App.js] getTotal() db result ',res ,' of ', curr.id);
         if (res) {
           price = res.Data[0].close;
         }
@@ -226,92 +196,46 @@ class App extends Component {
     return null;
   }
 
-  getSurprise = () => {
-    this.setState({
-      surprise: !this.state.surprise
-    })
-  }
-
-  handleLogin = (data) => {
-    const user = sessionStorage.getItem('user');
-    if (sessionStorage.getItem('user') === null) {
-      sessionStorage.setItem('user', JSON.stringify(data.profile.id));
-      this.firebaseToThis(user)
-    } else {
-      sessionStorage.removeItem('user');
-      this.setState({total:0})
-      this.firebaseToThis(user)
-    }
-    this.setState({
-      loginChange: !this.state.loginChange
-    })
-  }
-
   render() {
 
-    let widget1 = null;
-    let widget2 = null;
+    let widget = null;
     let total = null;
     let add;
     var data = this.state.api;
-    let surprise = <u className="surprise" onClick={this.getSurprise}>Click me to receive a surprise</u>;
-
-    if (this.state.surprise) {
-      surprise = <Footer/>
-    }
 
     if (this.state.available) {
-      widget1 = null;
-      widget2 = <Widget actual={this.state.api.symbol} data={this.state.api} ammount={this.state.ammount} getTrend={this.getTrend}/>
+      widget = <Widget actual={this.state.api.symbol} data={this.state.api} ammount={this.state.ammount} getTrend={this.getTrend}/>
     } else {
-      widget1 = (<h1>
-        <b>Select the Currency</b>
-      </h1>)
-      widget2 = <Convert from={data.symbol} actual={data.price_usd} add={this.addToDBHandler} changeCurrency={this.changeCurrency} handleChange={this.handleChange} value={this.state.value}/>;
+      widget = (<h1>Select the ammount and the Currency</h1>)
     }
-
-
     if (this.state.ammount === 0) {
-      add = null
+      add = (<p className="App-intro">
+        <Convert from={data.symbol} actual={data.price_usd} add={this.addToDBHandler} changeCurrency={this.changeCurrency} handleChange={this.handleChange} value={this.state.value}/>
+      </p>)
     } else if (this.state.modify === false) {
       add = (<p>
-        <button onClick={this.activateModify}>Modify</button>
+        <Button medium="medium" onClick={this.activateModify}>Modify</Button>
       </p>)
->>>>>>> 668677b84fb4c130cc87b6e4de00d1758c470ab5
     }
-    if (trend < 0) {
-      if (isChrome) {
-        trend = trend + '$😡';
-      } else {
-        trend = trend + '$🙁';
-      }
+    if (this.state.modify === true) {
+      add = (<p className="App-intro">
+        <Convert from={data.symbol} actual={data.price_usd} add={this.addToDBHandler} changeCurrency={this.changeCurrency} handleChange={this.handleChange} value={this.state.value}/>
+      </p>)
     }
-<<<<<<< HEAD
-    return (<div>
-      <h2>Current price: {this.props.data.price_usd}
-        USD</h2>
-      <h2>Your ammount: {this.props.ammount}
-      </h2>
-      <h2 className={trendClass}>Daily trend: {trend}
-      </h2>
-    </div>)
-=======
+    // console.log('[App.js] data content : ',data);
     return (<div className="App">
       <div className="App-header">
         <img src={logo} className="App-logo" alt="logo"/>
-        <h2>CryptoWitdget</h2>
-        <h3>Your account value :</h3>
-        <h4>{this.state.total}$</h4>
+        <Title is="2" spaced="spaced">CryptoWitdget</Title>
+        <SubTitle is="4">Your account value :</SubTitle>
+        <Title is="4">{this.state.total.toFixed(2)}$</Title>
       </div>
       <div className="center">
-        {widget1}
-        <Select name="form-field-name" value={this.state.api.symbol} options={options} onChange={this.logChange} placeholder={this.state.api.symbol}/> {widget2}
+        <Select name="form-field-name" value={this.state.api.symbol} options={options} onChange={this.logChange} placeholder={this.state.api.symbol}/> {widget}
         {add}
       </div>
-      {surprise}
     </div>);
->>>>>>> 668677b84fb4c130cc87b6e4de00d1758c470ab5
   }
 }
 
-export default Widget;
+export default App;
