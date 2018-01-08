@@ -252,9 +252,9 @@ module.exports = {
     // Otherwise React will be compiled in the very slow development mode.
     new webpack.DefinePlugin(env.stringified, {
       'process.env': {
-        NODE_ENV: JSON.stringify(nodeEnv)
+        NODE_ENV: JSON.stringify(process.env.nodeEnv)
       },
-      TRACE_TURBOLINKS: devBuild
+      TRACE_TURBOLINKS: process.env.devBuild
     }),
     // Minify the code.
     new webpack.optimize.UglifyJsPlugin({
