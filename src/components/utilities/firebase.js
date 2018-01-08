@@ -2,12 +2,12 @@ import * as firebase from 'firebase';
 
 // Initialize Firebase
 var database = {
-  apiKey: "AIzaSyD7pjeu2NIZ51pHytDu2gZ5VFCIpThP8vg",
-  authDomain: "ccoin-24869.firebaseapp.com",
-  databaseURL: "https://ccoin-24869.firebaseio.com",
-  projectId: "ccoin-24869",
-  storageBucket: "ccoin-24869.appspot.com",
-  messagingSenderId: "425443290088"
+  apiKey: "AIzaSyBixWIPRNq8BrN-zPzat4jU7urA2oKu1ok",
+  authDomain: "public-test-db.firebaseapp.com",
+  databaseURL: "https://public-test-db.firebaseio.com",
+  projectId: "public-test-db",
+  storageBucket: "public-test-db.appspot.com",
+  messagingSenderId: "417106252205"
 };
 firebase.initializeApp(database);
 
