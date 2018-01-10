@@ -21,7 +21,8 @@ class App extends Component {
         symbol: 'BTC',
         price_usd: 0,
         oldprice_usd: 0,
-        trend: -1
+        trend: -1,
+        cut: 0
       },
       actualCurrency: '',
       ammount: 0,
@@ -29,7 +30,8 @@ class App extends Component {
       available: null,
       total: 0,
       firebase: [],
-      modify: false
+      modify: false,
+      initial_state: true
     };
   }
 
@@ -104,7 +106,9 @@ class App extends Component {
     const db = firebase.database().ref(user);
     db.once('value').then((snapshot) => {
       var ammount = (snapshot.val() && snapshot.val().value);
-      this.setState({ammount: ammount, available: 1});
+      let cut = this.state.price_usd * ammount
+      console.log(cut);
+      this.setState({ammount: ammount, available: 1, cut: cut, initial_state: false}); // AGGIUNTO YOUR CUT
       if (ammount === null) {
         this.setState({ammount: 0, available: null})
       }
@@ -204,15 +208,17 @@ class App extends Component {
     var data = this.state.api;
 
     if (this.state.available) {
+      this.setState({initial_state: false})
       widget = <Widget actual={this.state.api.symbol} data={this.state.api} ammount={this.state.ammount} getTrend={this.getTrend}/>
     } else {
       widget = (<h1>Select the ammount and the Currency</h1>)
     }
-    if (this.state.ammount === 0) {
-      add = (<p className="App-intro">
-        <Convert from={data.symbol} actual={data.price_usd} add={this.addToDBHandler} changeCurrency={this.changeCurrency} handleChange={this.handleChange} value={this.state.value}/>
-      </p>)
-    } else if (this.state.modify === false) {
+    // if (this.state.ammount === 0) {
+    //   add = (<p className="App-intro">
+    //     <Convert from={data.symbol} actual={data.price_usd} add={this.addToDBHandler} changeCurrency={this.changeCurrency} handleChange={this.handleChange} value={this.state.value}/>
+    //   </p>)
+    // } else
+    if (this.state.modify === false) {
       add = (<p>
         <Button medium="medium" onClick={this.activateModify}>Modify</Button>
       </p>)
@@ -221,6 +227,9 @@ class App extends Component {
       add = (<p className="App-intro">
         <Convert from={data.symbol} actual={data.price_usd} add={this.addToDBHandler} changeCurrency={this.changeCurrency} handleChange={this.handleChange} value={this.state.value}/>
       </p>)
+    }
+    if (this.state.initial_state === true) {
+      add = null
     }
     // console.log('[App.js] data content : ',data);
     return (<div className="App">

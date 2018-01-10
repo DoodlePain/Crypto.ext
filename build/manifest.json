@@ -1,14 +1,14 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Crypto.ext",
+  "name": "CryptoWitdget",
   "manifest_version": 2,
   "browser_action": {
     "default_popup": "index.html",
-    "default_title": "React Ext"
+    "default_title": "CryptoWitdget"
   },
   "icons": {
     "128": "icon.png"
   },
-  "version": "1.0",
-  "content_security_policy":"script-src 'self' https://ccoin-24869.firebaseio.com; https://s-usc1c-nss-211.firebaseio.com; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://*.firebase.com https://*.firebaseio.com; object-src 'self'",
+  "version": "1.0"
 }
