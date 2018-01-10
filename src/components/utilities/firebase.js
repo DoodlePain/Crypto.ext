@@ -1,11 +1,11 @@
 import * as firebase from 'firebase';
 
 var database = {
-  apiKey: <Your api key>,
-  authDomain: <Your authDomain>,
-  databaseURL: <Your databaseURL>,
-  projectId: <Your projectId>,
-  storageBucket: <Your storageBucket>,
-  messagingSenderId: <Your messagingSenderId>
-};
+  apiKey: <Your api="api" key="key">, authDomain:
+    <Your authDomain="authDomain">, databaseURL:
+      <Your databaseURL="databaseURL">, projectId:
+        <Your projectId="projectId">, storageBucket:
+          <Your storageBucket="storageBucket">, messagingSenderId:
+            <Your messagingSenderId="messagingSenderId">
+              };
 firebase.initializeApp(database);
